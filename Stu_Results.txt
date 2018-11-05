@@ -1,0 +1,23 @@
+S = load 'student' using PigStorage('\t') as (name:chararray, roll:int); 
+R = load 'results' using PigStorage('\t') as (roll:int, result:chararray);
+
+RP = FILTER R BY result == 'pass';
+
+stu_p = foreach(JOIN S by roll, RP by roll) generate name, result;
+
+store stu_p into 'sturesult' using PigStorage(',');
+
+/*
+script output
+
+Success!
+Job Stats (time in seconds):
+JobId   Maps    Reduces MaxMapTime      MinMapTIme      AvgMapTime      MedianMapTime   MaxReduceTime   MinReduceTime   AvgReduceTime   MedianReducetime        Alias   Feature Outputs
+job_1528714825862_21315 2       1       2       2       2       2       2       2       2       2       1-42,R,RP,S,stu_p       HASH_JOIN       hdfs://nameservice1/user/edureka_403927/sturesult,
+Input(s):
+Successfully read 20 records from: "hdfs://nameservice1/user/edureka_403927/student"
+Successfully read 20 records from: "hdfs://nameservice1/user/edureka_403927/results"
+Output(s):
+Successfully stored 12 records (137 bytes) in: "hdfs://nameservice1/user/edureka_403927/sturesult"
+
+*/

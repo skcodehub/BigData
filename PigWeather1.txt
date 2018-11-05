@@ -1,0 +1,10 @@
+A = load 'weatherPIG.txt' using TextLoader as (data:chararray);
+AF = foreach A generate TRIM(SUBSTRING(data, 6, 14)), TRIM(SUBSTRING(data, 46, 53)), TRIM(SUBSTRING(data, 38, 45));
+store AF into 'weather9' using PigStorage(',');
+
+-----UDF-----
+register udf_corrupt.jar;
+
+A = load 'weatherPIG.txt' using TextLoader as (data:chararray);
+AF = foreach A generate TRIM(SUBSTRING(data, 6, 14)), IfCorrupted(TRIM(SUBSTRING(data, 46, 53))), IfCorrupted(TRIM(SUBSTRING(data, 38, 45)));
+store AF into 'weather2' using PigStorage(',');

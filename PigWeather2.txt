@@ -1,0 +1,29 @@
+----loading and parsing data-----
+S = load 'weather9/part-m-00000' using PigStorage(',') as (date:chararray, min:double, max:double);
+
+-------Hot Days------
+
+X = filter S by max > 25;
+
+-------Cold Days------
+
+Y = filter S by min < 0;
+
+
+-------Hottest Day-----
+
+H1 = group S all; 	/* puts S's data in H1's Tuple */
+I = foreach H1 generate MAX(S.max) as maximum;
+X = filter S by max == I.maximum;
+store X into 'maxweather_1' using PigStorage(',');
+
+-------Coldest Day------
+
+H2 = group S all;
+J = foreach H2 generate MIN(S.min) as minimum;
+Y = filter S by min == J.minimum;
+store Y into 'minweather_1' using PigStorage(',');
+
+R = load 'weather2/part-m-00000' using PigStorage(',') as (date:chararray, min:double, max:double);
+Y = filter S by min < 0;
+store S into 'minconv_1';
