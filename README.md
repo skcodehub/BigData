@@ -1,2 +1,2 @@
 # BigData
-Pig, Hive, etc code samples
+Map reduce, Pig, Hive, etc code samples
